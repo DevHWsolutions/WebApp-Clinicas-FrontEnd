@@ -1,67 +1,53 @@
 <template>
   <v-app id="inspire">
     <v-app-bar>
-      <v-app-bar-nav-icon
-        @click="OpcionesVisibles = !OpcionesVisibles"
-      ></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="rail = !rail"></v-app-bar-nav-icon>
 
       <v-app-bar-title>Menu Principal</v-app-bar-title>
     </v-app-bar>
     <!--Menu del NavigationBar-->
-    <v-navigation-drawer v-model="OpcionesVisibles" temporary
-    class="bg-deep-purple"
-        theme="dark"
-        permanent
-        
+  <v-navigation-drawer :rail="rail" permanent @click="rail = false" class="sidebar">
+    <v-list-item
+      prepend-avatar="https://randomuser.me/api/portraits/men/80.jpg"
+      title="Menú"
+      nav
+      class="menu-item" 
     >
-   
-        <v-list v-model:opened="open">
-          <v-list-item prepend-icon="mdi-home" title="Home"></v-list-item>
+      <template v-slot:append>
+        <v-btn
+          variant="text"
+          icon="mdi-chevron-left"
+          @click.stop="rail = !rail"
+        ></v-btn>
+      </template>
+    </v-list-item>
 
-          <v-list-group value="Users">
-            <template v-slot:activator="{ props }">
-              <v-list-item
-                v-bind="props"
-                prepend-icon="mdi-account-circle"
-                title="Users"
-              ></v-list-item>
-            </template>
+    <v-divider></v-divider>
 
-            <v-list-group value="Admin">
-              <template v-slot:activator="{ props }">
-                <v-list-item v-bind="props" title="Admin"></v-list-item>
-              </template>
+    <v-list density="compact" nav>
+      <v-list-item
+        prepend-icon="mdi-calendar-today"
+        title="Agenda"
+        value="home"
+        class="menu-item" 
+      ></v-list-item>
+      <v-list-item
+        prepend-icon="mdi-folder-account"
+        title="Expediente"
+        value="account"
+        class="menu-item" 
+      ></v-list-item>
+      <v-list-item
+        prepend-icon="mdi-folder-plus"
+        title="Nuevo Expediente"
+        value="users"
+       class="menu-item" 
+      ></v-list-item>
+    </v-list>
+  </v-navigation-drawer>
 
-              <v-list-item
-                v-for="([title, icon], i) in admins"
-                :key="i"
-                :title="title"
-                :prepend-icon="icon"
-                :value="title"
-              ></v-list-item>
-            </v-list-group>
 
-            <v-list-group value="Actions">
-              <template v-slot:activator="{ props }">
-                <v-list-item v-bind="props" title="Actions"></v-list-item>
-              </template>
-
-              <v-list-item
-                v-for="([title, icon], i) in cruds"
-                :key="i"
-                :value="title"
-                :title="title"
-                :prepend-icon="icon"
-              ></v-list-item>
-            </v-list-group>
-          </v-list-group>
-        </v-list>
-   
-    </v-navigation-drawer>
     <!--/Menu del NavigationBar-->
-
-    
-    
 
     <v-main class="bg-grey-lighten-2">
       <v-container>
@@ -79,6 +65,7 @@
       </v-container>
       <FooterApp></FooterApp>
     </v-main>
+
   </v-app>
 </template>
 
@@ -87,35 +74,56 @@ import { ref } from "vue";
 // Components
 import FooterApp from "../src/components/Footer.vue";
 
-import  Navbar from "../src/components/Navbar.vue";
+import Navbar from "../src/components/Navbar.vue";
 
 export default {
   name: "App",
   components: {
     FooterApp, // Registra el componente de pie de página en el componente principal
-    Navbar
+    Navbar,
   },
   setup() {
-    const OpcionesVisibles = ref(true);
-    const open = ref(["Users"]);
-    const admins = ref([
-      ["Management", "mdi-account-multiple-outline"],
-      ["Settings", "mdi-cog-outline"],
-    ]);
-    const cruds = ref([
-      ["Create", "mdi-plus-outline"],
-      ["Read", "mdi-file-outline"],
-      ["Update", "mdi-update"],
-      ["Delete", "mdi-delete"],
-    ]);
+    const ActiveItem = ref(true);
+    const rail = ref(true);
 
     // Retorna 'items' desde el bloque 'setup'
     return {
-      open,
-      admins,
-      cruds,
-      OpcionesVisibles,
+      ActiveItem,
+      rail,
     };
   },
 };
 </script>
+
+<style>
+:root{
+  --siderbar-bg-color :#2f855a;
+  --sidebar-item-hover: #38a169;
+  --sidebar-item-active: #fd1f1c;
+  
+}
+ 
+ /* 
+ --sidebar-item-hover: #38a169;
+  --sidebar-item-active: #276749;
+ */
+</style>
+
+<style scoped>
+
+ 
+.sidebar{
+  color: white;
+  background-color: var(--sidebar-bg-color);
+}
+.menu-item:hover {
+  background-color: var(--sidebar-item-hover);
+}
+
+.menu-item.active {
+  background-color: var(--sidebar-item-active);
+}
+
+
+</style>
+
